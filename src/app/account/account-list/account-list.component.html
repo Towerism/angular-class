@@ -1,25 +1,31 @@
 <div class="container">
+  <h1>Account List</h1>
   <a href="javascript:void(0);" class="btn btn-primary" routerLink="new">
         New Account
     </a>
   <div class="clear"></div>
-  <table class="table table-striped" [hidden]="!accounts?.length">
+  <table class="table table-striped" [hidden]="!users?.length">
     <thead>
       <tr>
         <th>Name</th>
         <th>Email</th>
         <th class="text-center">Employee</th>
+        <th>&nbsp;</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let account of accounts">
+      <tr *ngFor="let user of users">
         <td>
-          <a [routerLink]="account.id">
-            {{account.name}}
+          <a [routerLink]="user.id">
+            {{user.name}}
 					</a>
         </td>
-        <td>{{account.email}}</td>
-        <td class="text-center">{{account.isEmployee ? 'Y' : 'N'}}</td>
+        <td>{{user.email}}</td>
+        <td class="text-center">{{user.isEmployee ? 'Y' : 'N'}}</td>
+        <td class="text-center">
+          <button class="btn btn-danger"
+                  (click)="deleteUser(user)">Delete</button>
+        </td>
       </tr>
     </tbody>
   </table>

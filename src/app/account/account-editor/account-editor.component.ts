@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router'
+import { User, UserRepository } from "../../domain/index";
+
+import 'rxjs/add/operator/first'
 
 @Component({
   moduleId: module.id,
@@ -7,7 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router'
   styleUrls: ['account-editor.component.css']
 })
 export class AccountEditorComponent implements OnInit {
-  user: any
+  title: string;
+  user: User;
   departments: { id: number, name: string }[] = [
     { id: 1, name: 'HR' },
     { id: 2, name: 'Marketing' },
@@ -17,35 +21,54 @@ export class AccountEditorComponent implements OnInit {
   
   _temp = { phone: {} }
 
-  constructor(private route: ActivatedRoute,
-              private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private userRepository: UserRepository
+  ) { }
 
   ngOnInit() {
     this.route.params.subscribe(x => this.loadRoute(x))
   }
 
   loadRoute(params: any) {
-    //TODO: Load from repository
     if (params.id) {
-      this.user = {
-        name: 'Martin',
-        phones: [
-          { type: 'mobile', number: '214-755-8663' },
-          { type: 'fax', number: '214-555-5555' },
-        ]
-      }
+      this.userRepository
+        .getById(+params.id)
+        .subscribe(x => this.loadUser(x));
     } else {
-      this.user = { phones: [] };
+      this.loadUser(new User);
     }
   }
 
+  loadUser(user: User) {
+    this.user = user;
+    this.title = user.id
+      ? user.name
+      : 'New User'
+
+  }
+
   addPhone() {
+    this.user.phones = this.user.phones || [];
     this.user.phones.push(this._temp.phone);
     this._temp.phone = {};
   }
 
   save() {
-    //TODO: Save
+    if (this.user.id) {
+      this.userRepository
+        .update(this.user)
+        .first().subscribe(x => this.onSave(x));
+    } else {
+      this.userRepository
+        .add(this.user)
+        .first().subscribe(x => this.onSave(x));
+    }
+  }
+
+  onSave(user: User) {
+    console.log('User saved!');
     this.router.navigateByUrl('accounts');
   }
 }
