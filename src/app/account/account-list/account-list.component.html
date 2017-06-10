@@ -1,0 +1,26 @@
+<div class="container">
+  <a href="javascript:void(0);" class="btn btn-primary" routerLink="new">
+        New Account
+    </a>
+  <div class="clear"></div>
+  <table class="table table-striped" [hidden]="!accounts?.length">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th class="text-center">Employee</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let account of accounts">
+        <td>
+          <a [routerLink]="account.id">
+            {{account.name}}
+					</a>
+        </td>
+        <td>{{account.email}}</td>
+        <td class="text-center">{{account.isEmployee ? 'Y' : 'N'}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
