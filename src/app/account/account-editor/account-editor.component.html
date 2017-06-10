@@ -12,7 +12,16 @@
         <div class="panel-body">
           <div class="form-group">
             <label for="user_name"> Name </label>
-            <input type="text" id="user_name" class="form-control" [(ngModel)]="user.name" />
+            <input type="text" 
+                   id="user_name" 
+                   class="form-control" 
+                   [(ngModel)]="user.name"
+                   fullName
+                   #userName="ngModel" />
+            <div class="alert alert-danger"
+                 *ngIf="userName.errors?.fullName">
+              Invalid User Name
+              </div>
           </div>
           <div class="form-group">
             <label for="user_email"> Email </label>
@@ -39,42 +48,9 @@
           </div>
         </div>
       </div>
-      <ul class="list-group">
-        <li class="list-group-item list-group-item-info">
-          Phone numbers
-        </li>
-        <li class="list-group-item" *ngFor="let phone of user.phones">
-          {{ phone.number }}
-          <span class="badge"> {{ phone.type }} </span>
-        </li>
-        <li class="list-group-item">
-          <div class="input-group">
-            <div class="input-group-btn">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> 
-                {{_temp.phone.type || 'SELECT' }} <span class="caret"></span> 
-              </button>
-              <ul class="dropdown-menu">
-                <li *ngFor="let phoneType of ['home', 'work', 'fax', 'mobile']">
-                  <a href="javascript:void(0)"
-                     (click)="_temp.phone.type = phoneType">
-                     {{phoneType}}
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <input type="text" 
-                   class="form-control" 
-                   placeholder="Add Phone..."
-                   [(ngModel)]="_temp.phone.number"/>
-            <span class="input-group-btn"> 
-              <button class="btn btn-info"
-                      (click)="addPhone()">
-                Add
-              </button>
-            </span>
-          </div>
-        </li>
-      </ul>
+      <phone-editor [(phones)]="user.phones"
+                    #phoneEditor>
+      </phone-editor>
     </div>
     <div class="col-md-4">
       <pre>{{ user | json }}</pre>
@@ -88,4 +64,12 @@
      routerLink="../../accounts">
     Back to List
   </a>
+  <button class="btn btn-warning btn-block btn-lg"
+          (click)="phoneEditor.clearList()">
+    Clear Phones
+  </button>
+  <button class="btn btn-default btn-block btn-lg"
+          (click)="debug(userName)">
+    Debug
+  </button>
 </div>

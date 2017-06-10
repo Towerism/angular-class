@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router'
 import { User, UserRepository } from "../../domain/index";
 
 import 'rxjs/add/operator/first'
+import { PhoneEditorComponent } from "../phone-editor/phone-editor.component";
 
 @Component({
   moduleId: module.id,
@@ -18,8 +19,9 @@ export class AccountEditorComponent implements OnInit {
     { id: 3, name: 'IT' },
     { id: 4, name: 'Accounting' }
   ];
-  
-  _temp = { phone: {} }
+
+  @ViewChild('phoneEditor')
+  phoneEditor: PhoneEditorComponent;
 
   constructor(
     private route: ActivatedRoute,
@@ -49,12 +51,6 @@ export class AccountEditorComponent implements OnInit {
 
   }
 
-  addPhone() {
-    this.user.phones = this.user.phones || [];
-    this.user.phones.push(this._temp.phone);
-    this._temp.phone = {};
-  }
-
   save() {
     if (this.user.id) {
       this.userRepository
@@ -70,5 +66,9 @@ export class AccountEditorComponent implements OnInit {
   onSave(user: User) {
     console.log('User saved!');
     this.router.navigateByUrl('accounts');
+  }
+
+  debug(value: any) {
+    debugger;
   }
 }
